@@ -47,7 +47,7 @@ class Menu extends Component {
   }
 
   render() {
-    const menu = this.state.dishes.map((dish) => {
+    const menu = this.props.dishes.map((dish) => {
       return (
         <div key={dish.id} className="mt-5">
 
