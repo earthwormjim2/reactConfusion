@@ -4,7 +4,9 @@ import { Card, CardImg, CardImgOverlay, CardTitle } from 'reactstrap';
 
 class Menu extends Component {
 
-
+  componentDidMount() {
+    console.log("Menu Component componentDidMount invoked");
+}
   render() {
    // console.log(this.props);
 

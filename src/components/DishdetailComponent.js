@@ -7,6 +7,13 @@ class DishDetail extends Component {
         this.state = {};
     }
 
+    componentDidMount() {
+        console.log("DishDetail Component componentDidMount invoked");
+    }
+
+    componentDidUpdate() {
+        console.log("DishDetail Component componentDidUpdate invoked");
+    }
 
     render() {
   //      console.log("Starting Dish Detail Render for dish: " + this.props.dish);
@@ -62,14 +69,12 @@ class DishDetail extends Component {
 
         if (this.props.dish != null) {
             return (
-                <div class="container">
                     <div className='row'>
                         <div className="col-12 col-md-5 m-1">
                             {renderDish(this.props.dish)}
                         </div>
                         {renderComments(this.props.dish.comments)}
                     </div>
-                </div>
 
             )
         } else {
