@@ -1,23 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Card, CardImg, CardText, CardBody, CardTitle, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
 
-class DishDetail extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
 
-    componentDidMount() {
-        console.log("DishDetail Component componentDidMount invoked");
-    }
 
-    componentDidUpdate() {
-        console.log("DishDetail Component componentDidUpdate invoked");
-    }
-
-    render() {
-  //      console.log("Starting Dish Detail Render for dish: " + this.props.dish);
-        function renderDish(dish) {
+  
+    function RenderDish({ dish }) {
   //          console.log("Rendering Dish:" + dish);
 
             return (
@@ -31,7 +18,7 @@ class DishDetail extends Component {
             );
         }
 
-        function renderComments(comments) {
+    function RenderComments({ comments }) {
 
 
             const commentListGroupItems = comments.map((comment) => {
@@ -67,14 +54,15 @@ class DishDetail extends Component {
 
         }
 
-        if (this.props.dish != null) {
+        const DishDetail = (props) => {
+        if (props.dish != null) {
             return (
                 <div className="container">
                     <div className='row'>
                         <div className="col-12 col-md-5 m-1">
-                            {renderDish(this.props.dish)}
+                            <RenderDish dish={props.dish} />
                         </div>
-                        {renderComments(this.props.dish.comments)}
+                        <RenderComments comments={props.dish.comments}/>
                     </div>
                 </div>
 
@@ -84,8 +72,8 @@ class DishDetail extends Component {
                 <div></div>
             )
         }
-
     }
-}
+    
+
 
 export default DishDetail;
