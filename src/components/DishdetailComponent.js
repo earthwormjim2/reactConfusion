@@ -9,10 +9,12 @@ class DishDetail extends Component {
 
 
     render() {
-
+  //      console.log("Starting Dish Detail Render for dish: " + this.props.dish);
         function renderDish(dish) {
+  //          console.log("Rendering Dish:" + dish);
+
             return (
-                <Card>
+                <Card key={dish.id} >
                     <CardImg width="100%" src={dish.image} alt={dish.name} />
                     <CardBody>
                         <CardTitle><h1>{dish.name}</h1></CardTitle>
@@ -37,7 +39,7 @@ class DishDetail extends Component {
                 );
 
             });
-            console.log(commentListGroupItems);
+   //         console.log("Rendering Comments:" + commentListGroupItems);
 
             if (commentListGroupItems.length !== 0 ) {
 
@@ -58,14 +60,17 @@ class DishDetail extends Component {
 
         }
 
-        if (this.props.selectedDish != null) {
+        if (this.props.dish != null) {
             return (
-                <div className='row'>
-                    <div className="col-12 col-md-5 m-1">
-                        {renderDish(this.props.selectedDish)}
+                <div class="container">
+                    <div className='row'>
+                        <div className="col-12 col-md-5 m-1">
+                            {renderDish(this.props.dish)}
+                        </div>
+                        {renderComments(this.props.dish.comments)}
                     </div>
-                    {renderComments(this.props.selectedDish.comments)}
                 </div>
+
             )
         } else {
             return (
