@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
+import Home from './HomeComponent';
 import Menu from './MenuComponent';
-import DishDetail from './DishdetailComponent';
+// import DishDetail from './DishdetailComponent';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { DISHES } from '../shared/dishes';
+import { Routes, Route } from 'react-router-dom';
+
 
 
 
@@ -14,20 +17,27 @@ class Main extends Component {
             dishes: DISHES,
             selectedDish: null
         };
-//        this.onDishSelect = this.onDishSelect.bind(this);
+ //     this.onDishSelect = this.onDishSelect.bind(this);
     }
 
-    onDishSelect(dishId) {
-//        console.log("Entered Click Handler with dishId:" + dishId)
-        this.setState({ selectedDish: dishId });
-    }
 
     render() {
+        function HomePage() {
+            return (
+                <Home />
+            );
+        }
+
+
         return (
             <div>
                 <Header />
-                <Menu dishes={this.state.dishes} onClick={(dishId) => this.onDishSelect(dishId)} />
-                <DishDetail dish={this.state.dishes.filter((dish) => dish.id === this.state.selectedDish)[0]} />
+                <Routes>
+                    <Route path="/" index element={<HomePage />} />
+                    <Route path='/home' element={<HomePage />} />
+                    <Route path='/menu' element={<Menu dishes={this.state.dishes} />} />
+                    <Route path='*' element={<HomePage />} />
+                </Routes>
                 <Footer />
             </div>
         );
