@@ -50,7 +50,8 @@ class Main extends Component {
             );
         };
 
-        // note current react requires component => element and wrap Component names
+        // react router v6 requires component => element and wrap Component names, see: https://reactrouter.com/docs/en/v6/components/route 
+        // Also, using React Hooks to pass parameters, current supported method in React Router 6, see: https://reactrouter.com/docs/en/v6/hooks/use-params
         return (
             <div>
                 <Header />
