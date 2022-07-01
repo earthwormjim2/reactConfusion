@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Home from './HomeComponent';
 import Menu from './MenuComponent';
 import Contact from './ContactComponent';
-// import DishDetail from './DishdetailComponent';
+import DishDetail from './DishdetailComponent';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { DISHES } from '../shared/dishes';
@@ -10,7 +10,7 @@ import { COMMENTS } from '../shared/comments';
 import { PROMOTIONS } from '../shared/promotions';
 import { LEADERS } from '../shared/leaders';
 
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useParams } from 'react-router-dom';
 
 
 
@@ -40,6 +40,15 @@ class Main extends Component {
             );
         }
 
+        function DishWithId(props) {
+            let { dishId } = useParams();
+            console.log("Got here");
+            console.log("ID is: " + dishId);
+            return (
+                <DishDetail dish={props.dishes.filter((dish) => dish.id === parseInt(dishId, 10))[0]}
+                    comments={props.comments.filter((comment) => comment.dishId === parseInt(dishId, 10))} />
+            );
+        };
 
         // note current react requires component => element and wrap Component names
         return (
@@ -48,8 +57,9 @@ class Main extends Component {
                 <Routes>
                     <Route path="/" index element={<HomePage />} />
                     <Route path='/home' element={<HomePage dishes={this.state.dishes} />} />
-                    <Route path='/menu' element={<Menu dishes={this.state.dishes} />} />
-                    <Route exact path="/contactus" element={<Contact />} />
+                    <Route path='/menu' element={<Menu dishes={this.state.dishes} />}/>
+                    <Route path='/menu/:dishId' element={<DishWithId dishes={this.state.dishes} comments={this.state.comments} />} />
+                    <Route path="/contactus" element={<Contact />} />
                     <Route path='*' element={<HomePage />} />
                 </Routes>
                 <Footer />
