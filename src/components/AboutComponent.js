@@ -13,7 +13,12 @@ function About(props) {
                     <Media heading>
                         {leader.name}
                     </Media>
-                    {leader.description}
+                    <Media className='mb-2'>
+                        {leader.designation}
+                    </Media>
+                    <Media>
+                        {leader.description}
+                    </Media>
                 </Media>
             </Media>
         );
