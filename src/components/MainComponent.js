@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Home from './HomeComponent';
 import Menu from './MenuComponent';
+import About from './AboutComponent';
 import Contact from './ContactComponent';
 import DishDetail from './DishdetailComponent';
 import Header from './HeaderComponent';
@@ -58,6 +59,7 @@ class Main extends Component {
                 <Routes>
                     <Route path="/" index element={<HomePage />} />
                     <Route path='/home' element={<HomePage dishes={this.state.dishes} />} />
+                    <Route path='/aboutus' element={<About leaders={this.state.leaders} />} />
                     <Route path='/menu' element={<Menu dishes={this.state.dishes} />}/>
                     <Route path='/menu/:dishId' element={<DishWithId dishes={this.state.dishes} comments={this.state.comments} />} />
                     <Route path="/contactus" element={<Contact />} />
