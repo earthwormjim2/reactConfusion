@@ -43,8 +43,6 @@ class Main extends Component {
 
         function DishWithId(props) {
             let { dishId } = useParams();
-            console.log("Got here");
-            console.log("ID is: " + dishId);
             return (
                 <DishDetail dish={props.dishes.filter((dish) => dish.id === parseInt(dishId, 10))[0]}
                     comments={props.comments.filter((comment) => comment.dishId === parseInt(dishId, 10))} />
