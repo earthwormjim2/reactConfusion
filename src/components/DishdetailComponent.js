@@ -64,7 +64,8 @@ const DishDetail = (props) => {
             <div className="container">
                 <div className='row'>
                     <Breadcrumb className='bg-light'>
-                        <BreadcrumbItem> <Link to='/menu'>Home</Link> </BreadcrumbItem>
+                        <BreadcrumbItem> <Link to='/home'>Home</Link> </BreadcrumbItem>
+                        <BreadcrumbItem> <Link to='/menu'>Menu</Link> </BreadcrumbItem>
                         <BreadcrumbItem active>{ props.dish.name }</BreadcrumbItem>
                     </Breadcrumb>
                     <div className='col-12'>
