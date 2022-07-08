@@ -1,12 +1,96 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Card, CardImg, CardText, CardBody, CardTitle, ListGroup, ListGroupItem,
-    ListGroupItemHeading, ListGroupItemText, Breadcrumb, BreadcrumbItem
+    ListGroupItemHeading, ListGroupItemText, Breadcrumb, BreadcrumbItem,
+    Form, ModalHeader, Button, Modal, ModalBody, Input, FormGroup, Label
 } from 'reactstrap';
+import { useForm } from "react-hook-form";
+import { ErrorMessage } from "@hookform/error-message";
 import { Link } from 'react-router-dom'
 
+const WrappedInput = React.forwardRef((props, ref) => ( // Need to wrap standard class to expose ref to React-Hook-Forms
+    <Input innerRef={ref} {...props} />
+));
+
+function CommentForm() {
+
+    const [formData, setFormData] = useState({ //Using React Hooks from v16+ to maintain state with React Hooks vs. classes
+        rating: "",
+        author: "",
+        comment: "",
+        isModalOpen: false
+    })
+
+    const { register, handleSubmit, formState: { errors } } = useForm(); // React Hook form provides these for validation, error display
 
 
+    function toggleModal() {
+
+        setFormData({ ...formData, isModalOpen: !formData.isModalOpen });
+    }
+
+    return (
+        <React.Fragment>
+            <Button outline onClick={toggleModal}>
+                <span className="fa fa-sign-in fa-lg ">Submit Comment</span>
+            </Button>
+            <Modal isOpen={formData.isModalOpen} toggle={toggleModal}>
+                <ModalHeader>Submit Comment</ModalHeader>
+                <ModalBody >
+                    <Form onSubmit={handleSubmit((data) => {
+                        toggleModal();
+                        console.log(data);
+                        window.alert(JSON.stringify(data));
+                    })} onChange={(e) => { //setting change listener for the whole form, and updating based upon event
+                        // console.log(e.target.id + ":" + e.target.value);
+                        const value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+                        setFormData({ ...formData, [e.target.id]: value });
+
+                    }}>
+                        <FormGroup>
+                            <Label htmlFor="rating">Rating</Label>
+                            <WrappedInput type="select" id="rating" name='rating'
+                                value={formData.rating}
+                                {...register("rating")}>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </WrappedInput>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label htmlFor="commenter">Your Name</Label>
+                            <WrappedInput type="text" id="author" name="author" placeholder='Your Name'
+                                value={formData.author}
+                                {...register("author", {
+                                    required: "This field is required",
+                                    minLength: {
+                                        value: 3,
+                                        message: "Please enter a name with 3 or more characters."
+                                    },
+                                    maxLength: {
+                                        value: 15,
+                                        message: "Please enter a name with 15 or fewer characters"
+                                    }
+                                })} />
+                            <ErrorMessage className="text-danger" errors={errors} name="author" as="span" />
+
+                        </FormGroup>
+                        <FormGroup >
+                            <Label htmlFor="comment">Comment</Label>
+                            <WrappedInput type="textarea" id="comment" name="comment" rows="6"
+                                value={formData.comment}
+                                {...register("comment")} />
+                        </FormGroup>
+                        <Button type="submit" value="submit" color="primary" className="bg-primary">Submit</Button>
+                    </Form>
+                </ModalBody>
+            </Modal>
+        </React.Fragment>
+
+    );
+}
 
 function RenderDish({ dish }) {
     //          console.log("Rendering Dish:" + dish);
@@ -30,10 +114,11 @@ function RenderComments({ comments }) {
         const commentDateLocalTime = commentDate.toDateString();
 
         return (
-            <ListGroupItem key={comment.id}>
-                <ListGroupItemHeading>{comment.comment}</ListGroupItemHeading>
-                <ListGroupItemText>{comment.author}, {commentDateLocalTime}</ListGroupItemText>
-            </ListGroupItem>
+           
+                <ListGroupItem key={comment.id}>
+                    <ListGroupItemHeading>{comment.comment}</ListGroupItemHeading>
+                    <ListGroupItemText>{comment.author}, {commentDateLocalTime}</ListGroupItemText>
+                </ListGroupItem>
         );
 
     });
@@ -42,11 +127,12 @@ function RenderComments({ comments }) {
     if (commentListGroupItems.length !== 0) {
 
         return (
-            <div className="col-12 col-md-5 m-1">
+            <div>
                 <h4>Comments</h4>
                 <ListGroup>
                     {commentListGroupItems}
                 </ListGroup>
+                <CommentForm/>
             </div>
         );
 
@@ -66,7 +152,7 @@ const DishDetail = (props) => {
                     <Breadcrumb className='bg-light'>
                         <BreadcrumbItem> <Link to='/home'>Home</Link> </BreadcrumbItem>
                         <BreadcrumbItem> <Link to='/menu'>Menu</Link> </BreadcrumbItem>
-                        <BreadcrumbItem active>{ props.dish.name }</BreadcrumbItem>
+                        <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
                     </Breadcrumb>
                     <div className='col-12'>
                         <h3>Contact Us</h3>
@@ -75,10 +161,12 @@ const DishDetail = (props) => {
                 </div>
 
                 <div className='row'>
-                    <div className="col-12 col-md-5 m-1">
+                    <div className="col-12 col-md-4 m-1">
                         <RenderDish dish={props.dish} />
                     </div>
-                    <RenderComments comments={props.comments} />
+                    <div className="col col-md-7 m-1">
+                        <RenderComments comments={props.comments} />
+                    </div>
                 </div>
             </div>
 
