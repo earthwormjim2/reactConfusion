@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Breadcrumb, BreadcrumbItem, Button, Form, FormGroup, Label, Input, Col } from 'reactstrap'
 import { Link } from 'react-router-dom'
 import { useForm } from "react-hook-form";
@@ -10,19 +10,22 @@ const WrappedInput = React.forwardRef((props, ref) => (
     <Input innerRef={ref} {...props} />
 ));
 
+
 function Contact() {
+    
+    const [formData, setFormData] = useState({ //Using React Hooks from v16+ to maintain state with Hooks vs. classes
+        firstname: "",
+        lastname: "",
+        telnum: "",
+        email: "",
+        contactType: "",
+        agree: "",
+        message: ""
+    })
 
     const { register, handleSubmit, formState: { errors } } = useForm();
-    //   console.log("First Name: " + watch("firstname"));
-    //   console.log("Last Name: " + watch("lastname")); 
-    //   console.log("Telephone Number: " + watch("telnum")); 
-    //   console.log("Email: " + watch("email")); 
-    //   console.log("Contact Type: " + watch("contactType"));
-    //   console.log("Agreed: " + watch("agree"));
 
-
-
-
+    // Note that beolow code uses Error Message and react-hook-form for validation as react-redux form is deprecated in favor of Formik or react-hook-form
     return (
         <div className="container">
             <div className='row'>
@@ -67,13 +70,20 @@ function Contact() {
                     <h3>Send us Your Feedback</h3>
                 </div>
                 <div className='col-12 col-md-9'>
-                    <Form onSubmit={handleSubmit((data) => {
+                    <Form onChange={(e) => { //setting change listener for the whole form, and updating based upon event
+                       // console.log(e.target.id + ":" + e.target.value);
+                        const value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+                        setFormData({ ...formData, [e.target.id]: value });
+
+                    }}
+                        onSubmit={handleSubmit((data) => {
                         console.log(data)
                     })}>
                         <FormGroup row>
                             <Label htmlFor="firstname" md={2}>First Name</Label>
                             <Col md={10}>
                                 <WrappedInput type="text" placeholder='First Name' id="firstname"
+                                    value={formData.firstname}
                                     {...register("firstname", {
                                         required: "This field is required",
                                         minLength: {
@@ -93,6 +103,7 @@ function Contact() {
                             <Label htmlFor="lastname" md={2}>Last Name</Label>
                             <Col md={10}>
                                 <WrappedInput type="text" id="lastname" name="lastname" placeholder='Last Name'
+                                    value={formData.lastname}
                                     {...register("lastname", {
                                         required: "This field is required",
                                         minLength: {
@@ -112,6 +123,7 @@ function Contact() {
                             <Label htmlFor="telnum" md={2}>Contact Telephone</Label>
                             <Col md={10}>
                                 <WrappedInput type="tel" id="telnum" name="telnum" placeholder='Tel. Number'
+                                    value={formData.telnum}
                                     {...register("telnum", {
                                         required: "This field is required",
                                         pattern: {
@@ -126,7 +138,8 @@ function Contact() {
                         <FormGroup row>
                             <Label htmlFor="email" md={2}>Email</Label>
                             <Col md={10}>
-                                <WrappedInput type="email" id="email" name="email" placeholder='Email'
+                                <WrappedInput type="text" id="email" name="email" placeholder='Email'
+                                    value={formData.email}
                                     {...register("email", {
                                         required: "This field is required",
                                         pattern: {
@@ -141,16 +154,18 @@ function Contact() {
                         <FormGroup row>
                             <Col md={{ size: 6, offset: 2 }}>
                                 <FormGroup check>
-                                    <Label check>
+                                    <Label htmlFor="agree" check>
                                         {' '} <strong>May we contact you?</strong>
                                     </Label>
-                                    <WrappedInput type='checkbox' name='agree'
+                                    <WrappedInput type='checkbox' id="agree" name='agree'
+                                        value={formData.agree}
                                         {...register("agree")} />
 
                                 </FormGroup>
                             </Col>
                             <Col md={{ size: 3, offset: 1 }}>
-                                <WrappedInput type="select" name='contactType'
+                                <WrappedInput type="select" id="contactType" name='contactType'
+                                    value={formData.contactType}
                                     {...register("contactType")}>
                                     <option>Tel.</option>
                                     <option>Email</option>
@@ -161,6 +176,7 @@ function Contact() {
                             <Label htmlFor="message" md={2}>Your Feedback</Label>
                             <Col md={10}>
                                 <WrappedInput type="textarea" id="message" name="message" rows="12"
+                                    value={formData.message}
                                     {...register("message")} />
                             </Col>
                         </FormGroup>
