@@ -77,7 +77,7 @@ function Contact() {
 
                     }}
                         onSubmit={handleSubmit((data) => {
-                        console.log(data)
+                            console.log(data)
                     })}>
                         <FormGroup row>
                             <Label htmlFor="firstname" md={2}>First Name</Label>
