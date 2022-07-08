@@ -32,7 +32,7 @@ function CommentForm() {
     return (
         <React.Fragment>
             <Button outline onClick={toggleModal}>
-                <span className="fa fa-sign-in fa-lg ">Submit Comment</span>
+                <span className="fa fa-pencil fa-lg "> Submit Comment</span>
             </Button>
             <Modal isOpen={formData.isModalOpen} toggle={toggleModal}>
                 <ModalHeader>Submit Comment</ModalHeader>
