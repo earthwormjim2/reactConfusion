@@ -10,6 +10,7 @@ import Footer from './FooterComponent';
 
 import { Routes, Route, useParams, useLocation, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { addComment } from '../redux/ActionCreators';
 
 
 const mapStateToProps = state => {
@@ -19,7 +20,11 @@ const mapStateToProps = state => {
         promotions: state.promotions,
         leaders: state.leaders
         }
-    }
+}
+    
+const mapDispatchToProps = (dispatch) => ({
+    addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment))
+});
 
 function withRouter(Component) {
     function ComponentWithRouterProp(props) {
@@ -53,7 +58,8 @@ class Main extends Component {
             let { dishId } = useParams();
             return (
                 <DishDetail dish={props.dishes.filter((dish) => dish.id === parseInt(dishId, 10))[0]}
-                    comments={props.comments.filter((comment) => comment.dishId === parseInt(dishId, 10))} />
+                    comments={props.comments.filter((comment) => comment.dishId === parseInt(dishId, 10))}
+                    addComment={ props.addComment} />
             );
         };
 
@@ -67,7 +73,8 @@ class Main extends Component {
                     <Route path='/home' element={<HomePage dishes={this.props.dishes} />} />
                     <Route path='/aboutus' element={<About leaders={this.props.leaders} />} />
                     <Route path='/menu' element={<Menu dishes={this.props.dishes} />}/>
-                    <Route path='/menu/:dishId' element={<DishWithId dishes={this.props.dishes} comments={this.props.comments} />} />
+                    <Route path='/menu/:dishId' element=
+                        {<DishWithId dishes={this.props.dishes} comments={this.props.comments} addComment={this.props.addComment} />} />
                     <Route path="/contactus" element={<Contact />} />
                     <Route path='*' element={<HomePage />} />
                 </Routes>
@@ -77,4 +84,4 @@ class Main extends Component {
     }
 }
 
-export default withRouter(connect(mapStateToProps)(Main));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
