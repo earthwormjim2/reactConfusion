@@ -12,6 +12,19 @@ export const addComment = (dishId, rating, author, comment) => ({
     }
 });
 
+export const resetFeedbackForm = () => ({
+    type: ActionTypes.RESET_FEEDBACK_FORM,
+    payload: {}
+});
+
+export const updateFeedbackForm = (field, value) => ({
+    type: ActionTypes.UPDATE_FEEDBACK_FORM,
+    payload: {
+        field: field,
+        value: value
+    }
+});
+
 export const fetchDishes = () => (dispatch) => {
     dispatch(dishesLoading(true));
 

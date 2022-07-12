@@ -10,7 +10,7 @@ import Footer from './FooterComponent';
 
 import { Routes, Route, useParams, useLocation, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { addComment, fetchDishes } from '../redux/ActionCreators';
+import { addComment, fetchDishes, resetFeedbackForm, updateFeedbackForm } from '../redux/ActionCreators';
 
 
 const mapStateToProps = state => {
@@ -18,13 +18,17 @@ const mapStateToProps = state => {
         dishes: state.dishes,
         comments: state.comments, 
         promotions: state.promotions,
-        leaders: state.leaders
+        leaders: state.leaders,
+        feedback: state.feedback
         }
 }
     
 const mapDispatchToProps = (dispatch) => ({
     addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)),
-    fetchDishes: () => {dispatch(fetchDishes())}
+    fetchDishes: () => { dispatch(fetchDishes()) },
+    resetFeedbackForm: () => { dispatch(resetFeedbackForm()) } ,
+    updateFeedbackForm: (field, value) => { dispatch(updateFeedbackForm(field, value))}
+
 });
 
 function withRouter(Component) {
@@ -84,7 +88,8 @@ class Main extends Component {
                     <Route path='/menu' element={<Menu dishes={this.props.dishes} />}/>
                     <Route path='/menu/:dishId' element=
                         {<DishWithId dishes={this.props.dishes} comments={this.props.comments} addComment={this.props.addComment} />} />
-                    <Route path="/contactus" element={<Contact />} />
+                    <Route path="/contactus" element={<Contact resetFeedbackForm={this.props.resetFeedbackForm}
+                        updateFeedbackForm={this.props.updateFeedbackForm} />} />
                     <Route path='*' element={<HomePage />} />
                 </Routes>
                 <Footer />

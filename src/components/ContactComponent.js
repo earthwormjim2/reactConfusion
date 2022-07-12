@@ -3,25 +3,31 @@ import { Breadcrumb, BreadcrumbItem, Button, Form, FormGroup, Label, Input, Col 
 import { Link } from 'react-router-dom'
 import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
-
-
+import { useSelector } from 'react-redux';
 
 const WrappedInput = React.forwardRef((props, ref) => (
     <Input innerRef={ref} {...props} />
 ));
 
 
-function Contact() {
-    
-    const [formData, setFormData] = useState({ //Using React Hooks from v16+ to maintain state with Hooks vs. classes
-        firstname: "",
-        lastname: "",
-        telnum: "",
-        email: "",
-        contactType: "",
-        agree: "",
-        message: ""
-    })
+function Contact(props) {
+    const formState = useSelector(state => state.feedback);
+
+    const [formData, setFormData] = useState( //Using React Hooks from v16+ to maintain state with Hooks vs. classes
+        formState
+    );
+
+    function resetControlledFormState() {
+        setFormData({
+            firstname: '',
+            lastname: '',
+            telnum: '',
+            email: '',
+            agree: false,
+            contactType: 'Tel.',
+            message: ''
+        })
+    }
 
     const { register, handleSubmit, formState: { errors } } = useForm();
 
@@ -71,14 +77,16 @@ function Contact() {
                 </div>
                 <div className='col-12 col-md-9'>
                     <Form onChange={(e) => { //setting change listener for the whole form, and updating based upon event
-                       // console.log(e.target.id + ":" + e.target.value);
+                        // console.log(e.target.id + ":" + e.target.value);
                         const value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
                         setFormData({ ...formData, [e.target.id]: value });
-
+                        props.updateFeedbackForm(e.target.id, value);
                     }}
-                        onSubmit={handleSubmit((data) => {
-                            console.log(data)
-                    })}>
+                        onSubmit={handleSubmit((values) => {
+                            console.log(values);
+                            props.resetFeedbackForm();
+                            resetControlledFormState();
+                           })}>
                         <FormGroup row>
                             <Label htmlFor="firstname" md={2}>First Name</Label>
                             <Col md={10}>
@@ -195,3 +203,4 @@ function Contact() {
 }
 
 export default Contact;
+
