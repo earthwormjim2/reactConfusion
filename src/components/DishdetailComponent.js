@@ -8,6 +8,8 @@ import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import { Loading } from './LoadingComponent';
 import { Link } from 'react-router-dom'
+import { baseUrl } from '../shared/baseUrl';
+
 
 const WrappedInput = React.forwardRef((props, ref) => ( // Need to wrap standard class to expose ref to React-Hook-Forms
     <Input innerRef={ref} {...props} />
@@ -97,7 +99,7 @@ function RenderDish({ dish }) {
 
     return (
         <Card key={dish.id} >
-            <CardImg width="100%" src={dish.image} alt={dish.name} />
+            <CardImg width="100%" src={baseUrl + dish.image} alt={dish.name} />
             <CardBody>
                 <CardTitle><h1>{dish.name}</h1></CardTitle>
                 <CardText>{dish.description}</CardText>
