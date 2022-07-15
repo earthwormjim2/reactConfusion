@@ -42,7 +42,7 @@ function CommentForm(props) {
                 <ModalBody >
                     <Form onSubmit={handleSubmit((values) => {
                         toggleModal();
-                        props.addComment(props.dishId, values.rating, values.author, values.comment);
+                        props.postComment(props.dishId, values.rating, values.author, values.comment);
                     })} onChange={(e) => { //setting change listener for the whole form, and updating based upon event
                         // console.log(e.target.id + ":" + e.target.value);
                         const value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
@@ -108,7 +108,7 @@ function RenderDish({ dish }) {
     );
 }
 
-function RenderComments({ comments, addComment, dishId }) {
+function RenderComments({ comments, postComment, dishId }) {
 
 
     const commentListGroupItems = comments.map((comment) => {
@@ -134,7 +134,7 @@ function RenderComments({ comments, addComment, dishId }) {
                 <ListGroup>
                     {commentListGroupItems}
                 </ListGroup>
-                <CommentForm dishId={dishId} addComment={addComment} />
+                <CommentForm dishId={dishId} postComment={postComment} />
             </div>
         );
 
@@ -185,7 +185,7 @@ const DishDetail = (props) => {
                         <RenderDish dish={props.dish} />
                     </div>
                     <div className="col col-md-7 m-1">
-                        <RenderComments comments={props.comments} addComment={props.addComment} dishId={props.dish.id} />
+                        <RenderComments comments={props.comments} postComment={props.postComment} dishId={props.dish.id} />
                     </div>
                 </div>
             </div>
