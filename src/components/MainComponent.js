@@ -63,9 +63,9 @@ class Main extends Component {
                     dish={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}
                     promotion={this.props.promotions.promotions.filter((promo) => promo.featured)[0]} 
                     dishesLoading={this.props.dishes.isLoading}
-                    dishesErrMess={this.props.dishes.dishesErrMess}
+                    dishesErrMess={this.props.dishes.errMess}
                     promosLoading={this.props.promotions.isLoading}
-                    promosErrMess={this.props.promotions.dishesErrMess}
+                    promosErrMess={this.props.promotions.errMess}
                     leader={this.props.leaders.filter((leader) => leader.featured)[0]}
                 />
             );
@@ -105,4 +105,4 @@ class Main extends Component {
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main)); // connect uses mapState and mapDispatch to add props to Main component
