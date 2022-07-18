@@ -57,12 +57,8 @@ export const postComment = (dishId, rating, author, comment) => (dispatch) => { 
         .catch(error => dispatch(commentsFailed(error.message)));
 };
 
-export const feedbackFailed = (errmess) => ({
-    type: ActionTypes.FEEDBACK_FAILED,
-    payload: errmess
-});
 
-export const postFeedback = (firstname, lastname, telnum, email, agree, contactType, message) => (dispatch) => { //this is a react/redux "thunk"
+export const postFeedback = (firstname, lastname, telnum, email, agree, contactType, message) => () => { //this is a react/redux "thunk"
 
     const newFeedback = {
         firstname: firstname,
@@ -104,7 +100,8 @@ export const postFeedback = (firstname, lastname, telnum, email, agree, contactT
             console.log('Successfully posted feedback: ');
             console.log(response);
         })
-        .catch(error => dispatch(feedbackFailed(error.message)));
+        .catch(error => console.log("Failed attempt to post feedback: " + error.message));
+        // again, making another action doesn't help application state consistency, so no point.
 };
 
 
