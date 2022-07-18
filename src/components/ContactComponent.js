@@ -83,7 +83,7 @@ function Contact(props) {
                         props.updateFeedbackForm(e.target.id, value);
                     }}
                         onSubmit={handleSubmit((values) => {
-                            console.log(values);
+                            props.postFeedback(values.firstname, values.lastname, values.telnum, values.email, values.agree, values.contactType, values.message);
                             props.resetFeedbackForm();
                             resetControlledFormState();
                            })}>

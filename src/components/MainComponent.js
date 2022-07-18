@@ -8,7 +8,7 @@ import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { Routes, Route, useParams, useLocation, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { postComment, fetchComments, fetchDishes, fetchPromos, resetFeedbackForm, updateFeedbackForm } from '../redux/ActionCreators';
+import { postComment, fetchComments, fetchDishes, fetchPromos, resetFeedbackForm, updateFeedbackForm, fetchLeaders, postFeedback } from '../redux/ActionCreators';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 
@@ -28,8 +28,10 @@ const mapDispatchToProps = (dispatch) => ({
     resetFeedbackForm: () => { dispatch(resetFeedbackForm()) },
     updateFeedbackForm: (field, value) => { dispatch(updateFeedbackForm(field, value)) },
     fetchComments: () => { dispatch(fetchComments()) },
-    fetchPromos: () => { dispatch(fetchPromos()) }
-
+    fetchPromos: () => { dispatch(fetchPromos()) },
+    fetchLeaders: () => { dispatch(fetchLeaders()) },
+    postFeedback: (firstname, lastname, telnum, email, agree, contactType, message) =>
+        { dispatch(postFeedback(firstname, lastname, telnum, email, agree, contactType, message)) }
 });
 
 function withRouter(Component) {
@@ -56,6 +58,7 @@ class Main extends Component {
         this.props.fetchDishes();
         this.props.fetchComments();
         this.props.fetchPromos();
+        this.props.fetchLeaders();
     }
 
     render() {
@@ -68,7 +71,9 @@ class Main extends Component {
                     dishesErrMess={this.props.dishes.errMess}
                     promosLoading={this.props.promotions.isLoading}
                     promosErrMess={this.props.promotions.errMess}
-                    leader={this.props.leaders.filter((leader) => leader.featured)[0]}
+                    leadersLoading={this.props.leaders.isLoading}
+                    leadersErrMess={this.props.leaders.errMess}
+                    leader={this.props.leaders.leaders.filter((leader) => leader.featured)[0]}
                 />
             );
         }
@@ -96,14 +101,15 @@ class Main extends Component {
                     <RoutedTransitionGroup key={this.props.router.location.key} classNames="page" timeout={300}> 
                         <Routes location={this.props.router.location} >
                             <Route path="/" index element={<HomePage />} />
-                            <Route path='/home' element={<HomePage dishes={this.props.dishes} />} />
+                            <Route path='/home' element={<HomePage dishes={this.props.dishes} leaders={this.props.leaders} />} />
                             <Route path='/aboutus' element={<About leaders={this.props.leaders} />} />
                             <Route path='/menu' element={<Menu dishes={this.props.dishes} />} />
                             <Route path='/menu/:dishId' element=
                                 {<DishWithId dishes={this.props.dishes} comments={this.props.comments}
                                     addComment={this.props.addComment} postComment={this.props.postComment} />} />
                             <Route path="/contactus" element={<Contact resetFeedbackForm={this.props.resetFeedbackForm}
-                                updateFeedbackForm={this.props.updateFeedbackForm} />} />
+                                updateFeedbackForm={this.props.updateFeedbackForm}
+                                postFeedback={this.props.postFeedback} />} />
                             <Route path='*' element={<HomePage />} />
                         </Routes>
                     </RoutedTransitionGroup>

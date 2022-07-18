@@ -27,6 +27,11 @@ export const Feedback = (state = FEEDBACK, action) => {
                 contactType: 'Tel.',
                 message: ''
             });
+        case ActionTypes.POST_FEEDBACK:
+            return state;
+            // created new case to explicitly
+            // indicate we are *not* changing internal application 
+            // state in this task given there is no ask to render feedback
         default:
             return state;
     }
