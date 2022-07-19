@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import { useSelector } from 'react-redux';
+import { motion } from 'framer-motion';
 
 const WrappedInput = React.forwardRef((props, ref) => (
     <Input innerRef={ref} {...props} />
@@ -33,7 +34,10 @@ function Contact(props) {
 
     // Note that beolow code uses Error Message and react-hook-form for validation as react-redux form is deprecated in favor of Formik or react-hook-form
     return (
-        <div className="container">
+        <motion.div className="container"
+            initial={{ width: 0 }}
+            animate={{ width: "100%" }}
+            exit={{ x: window.innerWidth, transition: { duration: 0.1 } }}>
             <div className='row'>
                 <Breadcrumb className='bg-light'>
                     <BreadcrumbItem> <Link to='/home'>Home</Link> </BreadcrumbItem>
@@ -196,7 +200,7 @@ function Contact(props) {
                     </Form>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 
 

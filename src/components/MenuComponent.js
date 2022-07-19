@@ -2,7 +2,8 @@ import React from 'react';
 import { Card, CardImg, CardImgOverlay, CardTitle, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Loading } from './LoadingComponent';
-import {baseUrl} from '../shared/baseUrl'
+import { baseUrl } from '../shared/baseUrl';
+import { motion } from 'framer-motion';
 
 function RenderMenuItem({ dish }) {
 
@@ -50,7 +51,10 @@ const Menu = (props) => {
   }
   else
     return (
-      <div className="container">
+      <motion.div className="container"
+        initial={{ width: 0 }}
+        animate={{ width: "100%" }}
+        exit={{ x: window.innerWidth, transition: { duration: 0.1 } }}>
         <div className='row'>
           <Breadcrumb className='bg-light'>
             <BreadcrumbItem> <Link to='/home'>Home</Link> </BreadcrumbItem>
@@ -65,7 +69,7 @@ const Menu = (props) => {
         <div className="row">
           {menu}
         </div>
-      </div>
+      </motion.div>
     );
 }
 

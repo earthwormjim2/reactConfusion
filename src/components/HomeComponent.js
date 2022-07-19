@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle } from 'reactstrap'
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
+import { motion } from 'framer-motion';
 
 function RenderCard({ item, isLoading, errMess }) {
     if (isLoading) {
@@ -15,8 +16,8 @@ function RenderCard({ item, isLoading, errMess }) {
         );
     }
     else {
- //       console.log("Rendering Item: ");
- //       console.log(item);
+        //       console.log("Rendering Item: ");
+        //       console.log(item);
         return (
             <Card>
                 <CardImg src={baseUrl + item.image} alt={item.name} />
@@ -28,12 +29,16 @@ function RenderCard({ item, isLoading, errMess }) {
             </Card>
         )
     }
-        
+
 }
 
 function Home(props) {
     return (
-        <div className='container'>
+        <motion.div className='container'
+            initial={{ width: 0 }}
+            animate={{ width: "100%" }}
+            exit={{ x: window.innerWidth, transition: { duration: 0.1 } }}
+        >
             <div className='row align-items start'>
                 < div className='col-12 col-md m-1'>
                     <RenderCard item={props.dish}
@@ -51,7 +56,7 @@ function Home(props) {
                         errMess={props.leadersErrMess} />
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 }
 export default Home;

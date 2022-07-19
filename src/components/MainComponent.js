@@ -6,9 +6,10 @@ import Contact from './ContactComponent';
 import DishDetail from './DishdetailComponent';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
-import { Routes, Route, useParams, useLocation, useNavigate } from 'react-router-dom';
+import { Routes, Route, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { postComment, fetchComments, fetchDishes, fetchPromos, resetFeedbackForm, updateFeedbackForm, fetchLeaders, postFeedback } from '../redux/ActionCreators';
+import { AnimatePresence } from 'framer-motion';
 
 const mapStateToProps = state => {
     return {
@@ -19,6 +20,7 @@ const mapStateToProps = state => {
         feedback: state.feedback
     }
 }
+
 
 const mapDispatchToProps = (dispatch) => ({
     postComment: (dishId, rating, author, comment) => { dispatch(postComment(dishId, rating, author, comment)) },
@@ -33,13 +35,12 @@ const mapDispatchToProps = (dispatch) => ({
 
 function withRouter(Component) {
     function ComponentWithRouterProp(props) {
-        let location = useLocation();
         let navigate = useNavigate();
         let params = useParams();
         return (
             <Component
                 {...props}
-                router={{ location, navigate, params }}
+                router={{ navigate, params }}
             />
         );
     }
@@ -47,20 +48,27 @@ function withRouter(Component) {
     return ComponentWithRouterProp;
 }
 
+// Transitioned to functional component as React 16+ Hook useEffect gives us what DidComponentMount used to
+// and our state is managed by redux, so class state structure is no longer needed
 const Main = (props) => {
 
+    // Note that this runs twice when React is in Development mode in Strict with associated double render on reload... 
+    // The React team is trying to encourage developers to 
+    // cease to have "Side Effects of state rendering transisions... so the course method is now an anti-pattern of best practice.
+    // For now I'm leaving the useEffect hook in place as that's the closest to the DidComponentMount class method pre-hooks.
     useEffect(() => {
-        props.fetchDishes();
-        props.fetchComments();
-        props.fetchPromos();
-        props.fetchLeaders(); // code to run on component mount
+            props.fetchDishes();
+            props.fetchComments();
+            props.fetchPromos();
+            props.fetchLeaders(); // code to run on component mount
     }, [])
 
-
+    const location = useLocation();
 
     const HomePage = () => {
         return (
-            <Home
+
+            <Home 
                 dish={props.dishes.dishes.filter((dish) => dish.featured)[0]}
                 promotion={props.promotions.promotions.filter((promo) => promo.featured)[0]}
                 dishesLoading={props.dishes.isLoading}
@@ -71,6 +79,8 @@ const Main = (props) => {
                 leadersErrMess={props.leaders.errMess}
                 leader={props.leaders.leaders.filter((leader) => leader.featured)[0]}
             />
+
+
         );
     }
 
@@ -93,19 +103,22 @@ const Main = (props) => {
     return (
         <div>
             <Header />
-            <Routes >
-                <Route path="/" index element={<HomePage />} />
-                <Route path='/home' element={<HomePage dishes={props.dishes} leaders={props.leaders} />} />
-                <Route path='/aboutus' element={<About leaders={props.leaders} />} />
-                <Route path='/menu' element={<Menu dishes={props.dishes} />} />
-                <Route path='/menu/:dishId' element=
-                    {<DishWithId dishes={props.dishes} comments={props.comments}
-                        addComment={props.addComment} postComment={props.postComment} />} />
-                <Route path="/contactus" element={<Contact resetFeedbackForm={props.resetFeedbackForm}
-                    updateFeedbackForm={props.updateFeedbackForm}
-                    postFeedback={props.postFeedback} />} />
-                <Route path='*' element={<HomePage />} />
-            </Routes>
+            <AnimatePresence>
+                <Routes location={location} key={location.pathname}>
+                    <Route path="/" index element={<HomePage />} />
+                    <Route path='/home' element={<HomePage dishes={props.dishes} leaders={props.leaders} />} />
+                    <Route path='/aboutus' element={<About leaders={props.leaders} />} />
+                    <Route path='/menu' element={<Menu dishes={props.dishes} />} />
+                    <Route path='/menu/:dishId' element=
+                        {<DishWithId dishes={props.dishes} comments={props.comments}
+                            addComment={props.addComment} postComment={props.postComment} />} />
+                    <Route path="/contactus" element={<Contact resetFeedbackForm={props.resetFeedbackForm}
+                        updateFeedbackForm={props.updateFeedbackForm}
+                        postFeedback={props.postFeedback} />} />
+                    <Route path='*' element={<HomePage />} />
+                </Routes>
+            </AnimatePresence>
+
             <Footer />
         </div>
     );
