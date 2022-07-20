@@ -10,6 +10,30 @@ const WrappedInput = React.forwardRef((props, ref) => (
     <Input innerRef={ref} {...props} />
 ));
 
+const containerVariants = {
+    initial: {
+        opacity: 0,
+        x: '100vw'
+    },
+    displayed: {
+        opacity: 1,
+        x: 0,
+        transition: {
+            type: "spring",
+            delay: 0.2,
+            duration: 0.5,
+        }
+    },
+    departed: {
+        opacity: 0,
+        x: "-100vw",
+        transition: {
+            type: "spring",
+            delay: 0,
+            duration: 0.4,
+        }
+    }
+}
 
 function Contact(props) {
     const formState = useSelector(state => state.feedback);
@@ -35,9 +59,11 @@ function Contact(props) {
     // Note that beolow code uses Error Message and react-hook-form for validation as react-redux form is deprecated in favor of Formik or react-hook-form
     return (
         <motion.div className="container"
-            initial={{ width: 0 }}
-            animate={{ width: "100%" }}
-            exit={{ x: window.innerWidth, transition: { duration: 0.1 } }}>
+            variants={containerVariants}
+            initial="initial"
+            animate="displayed"
+            exit="departed"
+        >
             <div className='row'>
                 <Breadcrumb className='bg-light'>
                     <BreadcrumbItem> <Link to='/home'>Home</Link> </BreadcrumbItem>

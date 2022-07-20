@@ -5,11 +5,43 @@ import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
 import { motion } from 'framer-motion';
 
+// as the course's animation library, react-animation-components has been deprecated, 
+// I reimplimented using Framer - Motion which works with new versions
+// of react. This library is cleaner and more preformant, and also replaces the features in react-transition group.
+// This allows all the desired features with only one library vs. two (one of which, as mentioned, is deprecated)
+
+const containerVariants = {
+    initial: {
+        opacity: 0,
+        x: '100vw'
+    },
+    displayed: {
+        opacity: 1,
+        x: 0,
+        transition: {
+            type: "spring",
+            delay: 0.2,
+            duration: 0.5,
+        }
+    },
+    departed: {
+        opacity: 0,
+        x: "-100vw",
+        transition: {
+            type: "spring",
+            delay: 0,
+            duration: 0.4,
+        }
+    }
+}
+
 
 function About(props) {
     function RenderLeader({ leader }) {
         return (
-            <Media className="row my-5" key={leader.id} >
+            <Media className="row my-5" key={leader.id}
+                variants={containerVariants}
+            >
                 <Media left className="col col-sm-2" href="#">
                     <Media src={baseUrl + leader.image} alt={leader.name} />
                 </Media>
@@ -48,9 +80,19 @@ function About(props) {
         )
     }
     else {
-        leaders = (props.leaders.leaders.map((leader) => {
+        // while there is a staggerChildren property, doing it this way links the delay to when the object is rendered,
+        // otherwise depending on the timing of the redux load, one might "miss" the staggered Animation... this 
+        // method works both in the case of a page reload, and in the case of a transition from another page.
+        leaders = (props.leaders.leaders.map((leader, index) => {
             return (
-                <RenderLeader key={leader.id} leader={leader} />
+                <motion.div
+                    key={leader.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{delay: index * 0.5}}
+                >
+                    <RenderLeader  leader={leader} />
+                </motion.div>
             );
         }));
     }
@@ -60,9 +102,11 @@ function About(props) {
 
     return (
         <motion.div className="container"
-            initial={{ width: 0 }}
-            animate={{ width: "100%" }}
-            exit={{ x: window.innerWidth, transition: { duration: 0.1 } }}>
+            variants={containerVariants}
+            initial="initial"
+            animate="displayed"
+            exit="departed"
+        >
             <div className="row">
                 <Breadcrumb className='bg-light'>
                     <BreadcrumbItem><Link to="/home">Home</Link></BreadcrumbItem>
@@ -115,7 +159,7 @@ function About(props) {
                 <div className="col-12">
                     <h2>Corporate Leadership</h2>
                 </div>
-                <Media list>
+                <Media list >
                     {leaders}
                 </Media>
             </div>
